@@ -1,1 +1,2 @@
 # maglive
+first commit
