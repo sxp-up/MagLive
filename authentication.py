@@ -29,31 +29,6 @@ def get_metrics(y_true, y_pred):
     frr = 1-tpr
     return bac, far, frr
 
-# Keras custom metric for balanced accuracy
-def balanced_accuracy(y_true, y_pred):
-    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-    true_negatives = K.sum(K.round(K.clip((1-y_true) * (1-y_pred), 0, 1)))
-
-    false_positives = K.sum(K.round(K.clip((1-y_true) * y_pred, 0, 1)))
-    false_negatives = K.sum(K.round(K.clip(y_true * (1-y_pred), 0, 1)))
-
-    recall_pos = true_positives / (true_positives + false_negatives + K.epsilon())
-    recall_neg = true_negatives / (true_negatives + false_positives + K.epsilon())
-
-    balanced_acc = (recall_pos + recall_neg) / 2
-    return balanced_acc
-
-# Keras custom metrics for false acceptance and rejection rates
-def false_acceptance_rate(y_true, y_pred):
-    false_positives = K.sum(K.round(K.clip((1-y_true) * y_pred, 0, 1)))
-    true_negatives = K.sum(K.round(K.clip((1-y_true) * (1-y_pred), 0, 1)))
-    return false_positives / (false_positives + true_negatives + K.epsilon())
-
-def false_rejection_rate(y_true, y_pred):
-    false_negatives = K.sum(K.round(K.clip(y_true * (1-y_pred), 0, 1)))
-    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-    return false_negatives / (false_negatives + true_positives + K.epsilon())
-
 # Function to calculate the Equal Error Rate (EER)
 def calculate_eer(y_true, y_scores):
     fpr, tpr, thresholds = roc_curve(y_true, y_scores)
